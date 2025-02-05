@@ -1,0 +1,4 @@
+[wokwi]
+version = 1
+firmware = 'build/ATV_1_RICARDO.hex'
+elf = 'build/build/ATV_1_RICARDO.elf'
