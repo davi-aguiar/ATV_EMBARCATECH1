@@ -14,32 +14,32 @@ int estado_led = 0;
 // Função de callback para o timer
 bool repeating_timer_callback(struct repeating_timer *t)
 {
-    // Desliga todos os LEDs antes de acender o próximo
     gpio_put(LED_PIN_RED, 0);
     gpio_put(LED_PIN_GREEN, 0);
     gpio_put(LED_PIN_BLUE, 0);
 
-    // Acende o LED correspondente ao estado atual
-    switch (estado_led)
-    {
-    case 0:
+    // Verifica o estado do LED e acende o LED correspondente
+    if (estado_led == 0)
+    { // VERMELHO caso estado_led = 0
         printf("VERMELHO ACESO \n");
         gpio_put(LED_PIN_RED, 1);
-        break;
-    case 1:
+    }
+    else if (estado_led == 1)
+    { // VERDE caso estado_led = 1
         printf("VERDE ACESO \n");
         gpio_put(LED_PIN_GREEN, 1);
-        break;
-    case 2:
+    }
+    else if (estado_led == 2)
+    { // AZUL caso estado_led = 2
         printf("AZUL ACESO \n");
         gpio_put(LED_PIN_BLUE, 1);
-        break;
     }
 
-    // Atualiza o estado do LED ciclicamente
+    // Atualiza o estado do LED
     estado_led = (estado_led + 1) % 3;
 
-    return true; // Continua o timer
+    // Retorna true para continuar o timer
+    return true;
 }
 
 // Função principal
@@ -49,12 +49,14 @@ int main()
     stdio_init_all();
 
     // Inicialização dos pinos dos LEDs
-    int led_pins[] = {LED_PIN_RED, LED_PIN_GREEN, LED_PIN_BLUE};
-    for (int i = 0; i < 3; i++)
-    {
-        gpio_init(led_pins[i]);
-        gpio_set_dir(led_pins[i], true);
-    }
+    gpio_init(LED_PIN_RED);
+    gpio_set_dir(LED_PIN_RED, true);
+
+    gpio_init(LED_PIN_GREEN);
+    gpio_set_dir(LED_PIN_GREEN, true);
+
+    gpio_init(LED_PIN_BLUE);
+    gpio_set_dir(LED_PIN_BLUE, true);
 
     // Estrutura para o timer
     struct repeating_timer timer;
@@ -62,9 +64,10 @@ int main()
     // Configuração para iniciar o timer
     add_repeating_timer_ms(3000, repeating_timer_callback, NULL, &timer);
 
-    // Loop infinito com mensagem periódica
+    // Loop infinito
     while (true)
     {
+        // Aguarda 1 segundo e imprime uma mensagem
         sleep_ms(1000);
         printf("Passou 1 segundo\n");
     }
